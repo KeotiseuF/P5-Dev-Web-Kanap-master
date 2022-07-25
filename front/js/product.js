@@ -1,4 +1,4 @@
-const url = window.location.search
+const url = window.location.search;
 let params = new URLSearchParams(url);
 let id = params.get("id"); 
 
@@ -25,17 +25,63 @@ fetch("http://localhost:3000/api/products/" + id)
     description.textContent = data.description;
 
     let colors = data.colors;
+    let color_select = document.getElementById("colors");
+    
+    let addToCart = document.getElementById("addToCart");
     
     for (color of colors)
     {
         let createColor = document.createElement("option");
         createColor.setAttribute("value", color);
         createColor.innerHTML = color;
-        
-        let color_select = document.getElementById("colors");
-        color_select.appendChild(createColor); 
+        color_select.appendChild(createColor);         
     } 
+
+    addToCart.addEventListener("click", (e) => 
+    {
+      let choice_color = color_select.options[color_select.selectedIndex].value;
+      
+      let quantity = document.getElementById("quantity");
+      
+      let quantity_value = quantity.value;
+      
+      let product = {"id" : data._id, "color" : choice_color, "value" : parseInt(quantity_value)};
+    
+      let cart = JSON.parse(localStorage.getItem("cart"));
+
+      if( choice_color == "" || 0 >= quantity_value || quantity_value > 100)
+      {
+        window.alert("Information ci-dessous incorrecte");
+      }
+
+      else
+      {
+        if(cart == null)
+        {
+          cart = [];
+          cart.push(product);
+          localStorage.setItem("cart", JSON.stringify(cart));
+        }
+        else
+        {
+          localStorage.getItem("cart");
+          let searchProduct = cart.find(element => (element.id == product.id && element.color == product.color));
+          
+          if(searchProduct)
+          {          
+            searchProduct.value += product.value;
+            localStorage.setItem("cart", JSON.stringify(cart));
+          }
+          else
+          {
+            cart.push(product);
+            localStorage.setItem("cart", JSON.stringify(cart));
+          }
+        }
+      }
+    })
+    
   }) 
   .catch(function(err) {
-    // Une erreur est survenue
+    console.log("Une erreur est survenue");
   });
