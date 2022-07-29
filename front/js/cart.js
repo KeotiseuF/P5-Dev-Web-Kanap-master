@@ -9,7 +9,7 @@ fetch("http://localhost:3000/api/products")
 .then(function(data)
 {   
     let cart = JSON.parse(localStorage.getItem("cart")); 
-    
+    let tabPrice = []
     for(let i in cart)
     {
         let searchValue = data.filter(element => element._id == cart[i].id);
@@ -21,7 +21,7 @@ fetch("http://localhost:3000/api/products")
             let article = document.createElement("article");
             article.classList.add("cart__item");
             article.setAttribute("data-id", searchValue[0]._id);
-            article.setAttribute("data-color", searchValue[0].color);  
+            article.setAttribute("data-color", cart[i].color);  
             cartItems.appendChild(article);
 
             let itmImage = document.createElement("div");
@@ -83,11 +83,90 @@ fetch("http://localhost:3000/api/products")
             let deleteItem = document.createElement("p");
             deleteItem.classList.add("deleteItem"); 
             deleteItem.innerHTML = "Supprimer";
-            settingsDelete.appendChild(deleteItem)
+            deleteItem.dataset.indice = i; 
+            settingsDelete.appendChild(deleteItem);
+            
+            let totalPrice = document.getElementById("totalPrice")
+            let initialValue = 0 ;
+
+            input.addEventListener("change", (e) => 
+            {
+                let newValue = e.target.value;
+                input.setAttribute("value", newValue)
+                let modifiedPriceProduct = newValue * searchValue[0].price;
+                priceProduct.innerHTML = internationalNumberFormat.format(modifiedPriceProduct) + " €";
+                cart[i].value = parseInt(newValue);
+                localStorage.setItem("cart", JSON.stringify(cart));
+
+                //console.log(modifiedPriceProduct)
+                //console.log(tabPrice[i])
+                if(modifiedPriceProduct > tabPrice[i])
+                {
+                    tabPrice[i] = modifiedPriceProduct 
+
+                    totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
+                    initialValue))
+                }
+
+                else if(modifiedPriceProduct < tabPrice[i])
+                {
+                    tabPrice[i] = modifiedPriceProduct 
+                    totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
+                    initialValue))
+                    
+                    if (modifiedPriceProduct < 0)
+                    {
+                        tabPrice[i] = 0;
+                        totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
+                        initialValue))
+                    }
+                }
+
+                
+               
+                if(cart[i].value <= 0)
+                {
+                    let removeArticle = e.target.closest("article");
+                    let button = removeArticle.querySelector(".deleteItem");
+                    cartItems.removeChild(removeArticle);
+                    let indice = button.dataset.indice;
+                    cart.splice(indice, 1);
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    totalQuantity.innerText = cart.length;
+                }
+            })
+            
+            let totalQuantity = document.getElementById("totalQuantity");
+            
+            
+
+            deleteItem.addEventListener("click", (e) => 
+            {
+                let data = article.dataset;
+                if(data)
+                {   
+                    let removeArticle = e.target.closest("article");
+                    let button = removeArticle.querySelector(".deleteItem");
+                    cartItems.removeChild(removeArticle);
+                    let indice = button.dataset.indice;
+                    cart.splice(indice, 1);
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    totalQuantity.innerText = cart.length;
+                    tabPrice[i] = 0; 
+                    totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
+                    initialValue))                
+                }
+            })
+  
+            totalQuantity.innerText = cart.length;
+            
+            tabPrice.push(totalPriceByProduct) 
+            totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
+            initialValue))
         }
     }  
 })
 .catch(function (err) 
 {
-    console.log("Une erreur est survenue");
+    console.error("Une erreur est survenue");
 });

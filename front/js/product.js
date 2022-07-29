@@ -70,18 +70,18 @@ fetch("http://localhost:3000/api/products/" + id)
           if(searchProduct)
           {          
             searchProduct.value += product.value;
-            localStorage.setItem("cart", JSON.stringify(cart));
           }
           else
           {
             cart.push(product);
-            localStorage.setItem("cart", JSON.stringify(cart));
           }
+          
+          localStorage.setItem("cart", JSON.stringify(cart));
         }
       }
     })
     
   }) 
   .catch(function(err) {
-    console.log("Une erreur est survenue");
+    console.error("Une erreur est survenue");
   });
