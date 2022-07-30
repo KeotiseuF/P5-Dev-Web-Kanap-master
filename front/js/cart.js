@@ -9,7 +9,7 @@ fetch("http://localhost:3000/api/products")
 .then(function(data)
 {   
     let cart = JSON.parse(localStorage.getItem("cart")); 
-    let tabPrice = []
+    let tabPrice = [];
     for(let i in cart)
     {
         let searchValue = data.filter(element => element._id == cart[i].id);
@@ -85,45 +85,45 @@ fetch("http://localhost:3000/api/products")
             deleteItem.innerHTML = "Supprimer";
             deleteItem.dataset.indice = i; 
             settingsDelete.appendChild(deleteItem);
-            
-            let totalPrice = document.getElementById("totalPrice")
+           
+            let totalQuantity = document.getElementById("totalQuantity"); 
+           
+            let totalPrice = document.getElementById("totalPrice");
             let initialValue = 0 ;
-
+            
+            
+            
             input.addEventListener("change", (e) => 
             {
                 let newValue = e.target.value;
-                input.setAttribute("value", newValue)
+                input.setAttribute("value", newValue);
                 let modifiedPriceProduct = newValue * searchValue[0].price;
                 priceProduct.innerHTML = internationalNumberFormat.format(modifiedPriceProduct) + " €";
                 cart[i].value = parseInt(newValue);
                 localStorage.setItem("cart", JSON.stringify(cart));
 
-                //console.log(modifiedPriceProduct)
-                //console.log(tabPrice[i])
                 if(modifiedPriceProduct > tabPrice[i])
                 {
-                    tabPrice[i] = modifiedPriceProduct 
+                    tabPrice[i] = modifiedPriceProduct;
 
                     totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
-                    initialValue))
+                    initialValue));
                 }
 
                 else if(modifiedPriceProduct < tabPrice[i])
                 {
-                    tabPrice[i] = modifiedPriceProduct 
+                    tabPrice[i] = modifiedPriceProduct; 
                     totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
-                    initialValue))
+                    initialValue));
                     
                     if (modifiedPriceProduct < 0)
                     {
                         tabPrice[i] = 0;
                         totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
-                        initialValue))
+                        initialValue));
                     }
                 }
-
-                
-               
+           
                 if(cart[i].value <= 0)
                 {
                     let removeArticle = e.target.closest("article");
@@ -136,10 +136,6 @@ fetch("http://localhost:3000/api/products")
                 }
             })
             
-            let totalQuantity = document.getElementById("totalQuantity");
-            
-            
-
             deleteItem.addEventListener("click", (e) => 
             {
                 let data = article.dataset;
@@ -154,18 +150,160 @@ fetch("http://localhost:3000/api/products")
                     totalQuantity.innerText = cart.length;
                     tabPrice[i] = 0; 
                     totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
-                    initialValue))                
+                    initialValue));                
                 }
             })
   
             totalQuantity.innerText = cart.length;
             
-            tabPrice.push(totalPriceByProduct) 
+            tabPrice.push(totalPriceByProduct); 
             totalPrice.innerText = internationalNumberFormat.format(tabPrice.reduce((previousValue, currentValue) => previousValue + currentValue,
-            initialValue))
+            initialValue));
         }
-    }  
-})
+    }
+    
+    let inputFirstName = document.getElementById("firstName");
+    let firstNameError = document.getElementById("firstNameErrorMsg");
+    let testFirstName = false;
+
+    let inputLastName = document.getElementById("lastName");
+    let lastNameError = document.getElementById("lastNameErrorMsg");
+    let testLastName = false;
+
+    let inputAddress = document.getElementById("address");
+    let addressError = document.getElementById("addressErrorMsg");
+    let testAddress = false;
+
+    let inputCity = document.getElementById("city");
+    let cityError = document.getElementById("cityErrorMsg");
+    let testCity = false;
+
+    let inputEmail = document.getElementById("email");
+    let emailError = document.getElementById("emailErrorMsg");
+    let testEmail = false;
+
+    let submit = document.getElementById("order");
+    submit.disabled = true;
+    
+    inputFirstName.addEventListener("change", () =>
+    {
+        validFirstName(); 
+        order(testFirstName, testLastName, testAddress, testCity, testEmail);
+    });
+
+    inputLastName.addEventListener("change", () =>
+    {
+        validLastName(); 
+        order(testFirstName, testLastName, testAddress, testCity, testEmail);
+    });
+    
+    inputAddress.addEventListener("change", () =>
+    {
+        validAddress(); 
+        order(testFirstName, testLastName, testAddress, testCity, testEmail);
+    });
+
+    inputCity.addEventListener("change", () =>
+    {
+        validCity(); 
+        order(testFirstName, testLastName, testAddress, testCity, testEmail);
+    });
+
+    inputEmail.addEventListener("change", () =>
+    {
+        validEmail(); 
+        order(testFirstName, testLastName, testAddress, testCity, testEmail);
+    });
+
+    let validFirstName = function ()
+    {                              
+        let regFirstName = new RegExp("^[A-Za-z][A-Za-zéçèàûîôïüä-]+$");
+        testFirstName = regFirstName.test(inputFirstName.value); 
+
+        if(testFirstName == false)
+        {
+            firstNameError.textContent = "Ceci est un message d'erreur";
+        }
+        else
+        {
+            firstNameError.textContent = "";
+        };
+    }
+    
+    let validLastName = function ()
+    {                              
+        
+        let regLastName = new RegExp("^[A-Za-z][A-Za-zéçèàûîôïüä-]+$");
+        testLastName = regLastName.test(inputLastName.value); 
+       
+        if(testLastName == false)
+        {
+            lastNameError.textContent = "Ceci est un message d'erreur";
+        }
+        else
+        {
+            lastNameError.textContent = "";
+        };
+    }
+
+    let validAddress = function ()
+    {                              
+        let regAddress = new RegExp("^[0-9][-A-Za-z0-9éçèàûîôïüä._ ]+$");
+        testAddress = regAddress.test(inputAddress.value); 
+ 
+        if(testAddress == false)
+        {
+            addressError.textContent = "Ceci est un message d'erreur";
+        }
+        else
+        {
+            addressError.textContent = "";
+        };
+    }
+
+    let validCity = function ()
+    {                              
+        let regCity = new RegExp("^[A-Za-z][A-Za-zéçèàûîôïüä-]+$");
+        testCity = regCity.test(inputCity.value); 
+
+        if(testCity == false)
+        {
+            cityError.textContent = "Ceci est un message d'erreur";
+        }
+        else
+        {
+            cityError.textContent = "";
+        }
+    }
+
+    let validEmail = function ()
+    {                              
+    
+        let regEmail = new RegExp("^[A-Za-z][-a-z0-9._]+[-a-z0-9]@[-a-z0-9]+[.]{1}[a-z]{2,5}$");
+        testEmail = regEmail.test(inputEmail.value); 
+   
+        if(testEmail == false)
+        {
+            emailError.textContent = "Ceci est un message d'erreur";
+        }
+        else
+        {
+            emailError.textContent = "";
+        };
+    }
+ 
+    let order = (testFirstName, testLastName, testAddress, testCity, testEmail) =>
+    {
+        if(testFirstName && testLastName && testAddress && testCity && testEmail)
+        {
+            submit.disabled = false;
+        }
+        else
+        {
+            submit.disabled = true;
+        }
+    }    
+ })    
 .catch(function (err) 
 {
     console.error("Une erreur est survenue");
