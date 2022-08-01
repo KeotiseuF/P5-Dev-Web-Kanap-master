@@ -185,6 +185,8 @@ fetch("http://localhost:3000/api/products")
     let submit = document.getElementById("order");
     submit.disabled = true;
     
+    let contact = {};
+    
     inputFirstName.addEventListener("change", () =>
     {
         validFirstName(); 
@@ -296,13 +298,53 @@ fetch("http://localhost:3000/api/products")
     {
         if(testFirstName && testLastName && testAddress && testCity && testEmail)
         {
-            submit.disabled = false;
+            submit.disabled = false;  
+            
+            let firstNameValue = inputFirstName.value;
+            let lastNameValue = inputLastName.value;
+            let addressValue = inputAddress.value;
+            let cityValue = inputCity.value;
+            let emailValue = inputEmail.value;
+            contact = {"firstName" : firstNameValue, "lastName" : lastNameValue, "address" : addressValue, "city" : cityValue, "email" : emailValue};
+            
+            let products = [];
+            while(products.length != cart.length)
+            {
+                let i = 0;
+                products.push(cart[i++].id);
+            }
+
+            let commande = {contact, products}  
+           
+            fetch("http://localhost:3000/api/products/order", 
+            {
+                method: "POST",
+                headers: 
+                {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify(commande)
+            }).then((response) => 
+            {
+                return response.json();
+            }).then((data) => 
+            {   
+                let orderId = "http://127.0.0.1:5500/front/html/confirmation.html?" + "id=" + data.orderId;
+                    submit.addEventListener("click", (e) =>
+                    {
+                        e.preventDefault();
+                        window.location.href = orderId;
+                    })
+            }).catch((error) => 
+            {
+                console.error("Erreur confirmation");
+            })
         }
         else
         {
             submit.disabled = true;
         }
-    }    
+    } 
  })    
 .catch(function (err) 
 {
