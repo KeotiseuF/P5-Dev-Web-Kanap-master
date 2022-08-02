@@ -10,64 +10,64 @@ fetch("http://localhost:3000/api/products")
 {   
     let cart = JSON.parse(localStorage.getItem("cart")); 
     let tabPrice = [];
-    for(let i in cart)
+    for(let i in cart) // Boucle qui permet d'afficher chaque élement du panier sur la page panier.
     {
-        let searchValue = data.filter(element => element._id == cart[i].id);
+        const searchValue = data.filter(element => element._id == cart[i].id);
         
-        if(searchValue)
+        if(searchValue) // Vérifie que l'id est bien dans le panier et s'il y est ajoute les détails du produit.
         {
-            let cartItems = document.getElementById("cart__items");
+            const cartItems = document.getElementById("cart__items");
 
-            let article = document.createElement("article");
+            const article = document.createElement("article");
             article.classList.add("cart__item");
             article.setAttribute("data-id", searchValue[0]._id);
             article.setAttribute("data-color", cart[i].color);  
             cartItems.appendChild(article);
 
-            let itmImage = document.createElement("div");
+            const itmImage = document.createElement("div");
             itmImage.classList.add("cart__item__img");
             article.appendChild(itmImage);
 
-            let image = document.createElement("img");
+            const image = document.createElement("img");
             image.setAttribute("src", searchValue[0].imageUrl);
             image.setAttribute("alt", searchValue[0].altTxt);
             itmImage.appendChild(image);
 
-            let itemContent = document.createElement("div");
+            const itemContent = document.createElement("div");
             itemContent.classList.add("cart__item__content");
             article.appendChild(itemContent);
 
-            let contentDescription = document.createElement("div");
+            const contentDescription = document.createElement("div");
             contentDescription.classList.add("cart__item__content__description");
             itemContent.appendChild(contentDescription);
             
-            let nameProduct = document.createElement("h2");
+            const nameProduct = document.createElement("h2");
             nameProduct.innerHTML = searchValue[0].name;
             contentDescription.appendChild(nameProduct);
 
-            let colorProduct = document.createElement("p");
+            const colorProduct = document.createElement("p");
             colorProduct.innerHTML = cart[i].color;       
             contentDescription.appendChild(colorProduct);
 
-            let priceProduct = document.createElement("p");
+            const priceProduct = document.createElement("p");
             let totalPriceByProduct = searchValue[0].price * cart[i].value;
-            let internationalNumberFormat = new Intl.NumberFormat('en-US');
+            const internationalNumberFormat = new Intl.NumberFormat('en-US');
             priceProduct.innerHTML = internationalNumberFormat.format(totalPriceByProduct) + " €";
             contentDescription.appendChild(priceProduct);
 
-            let settingsContent = document.createElement("div");
+            const settingsContent = document.createElement("div");
             settingsContent.classList.add("cart__item__content__settings");
             itemContent.appendChild(settingsContent);
 
-            let settingsQuantity = document.createElement("div");
+            const settingsQuantity = document.createElement("div");
             settingsQuantity.classList.add("cart__item__content__settings__quantity");
             settingsContent.appendChild(settingsQuantity);
 
-            let quantity = document.createElement("p");
+            const quantity = document.createElement("p");
             quantity.innerHTML = "Qté : ";
             settingsQuantity.appendChild(quantity);
 
-            let input = document.createElement("input");
+            const input = document.createElement("input");
             input.setAttribute("type", "number");
             input.classList.add("itemQuantity");
             input.setAttribute("name", "itemQuantity");
@@ -76,24 +76,24 @@ fetch("http://localhost:3000/api/products")
             input.setAttribute("value", cart[i].value);
             settingsQuantity.appendChild(input);
 
-            let settingsDelete = document.createElement("div");
+            const settingsDelete = document.createElement("div");
             settingsDelete.classList.add("cart__item__content__settings__delete");
             settingsContent.appendChild(settingsDelete);
 
-            let deleteItem = document.createElement("p");
+            const deleteItem = document.createElement("p");
             deleteItem.classList.add("deleteItem"); 
             deleteItem.innerHTML = "Supprimer";
             deleteItem.dataset.indice = i; 
             settingsDelete.appendChild(deleteItem);
            
-            let totalQuantity = document.getElementById("totalQuantity"); 
+            const totalQuantity = document.getElementById("totalQuantity"); 
            
-            let totalPrice = document.getElementById("totalPrice");
+            const totalPrice = document.getElementById("totalPrice");
             let initialValue = 0 ;
             
             
             
-            input.addEventListener("change", (e) => 
+            input.addEventListener("change", (e) => // Fait en sorte que le prix s'ajuste lorsque le nombre de produit se modifie.
             {
                 let newValue = e.target.value;
                 input.setAttribute("value", newValue);
@@ -124,10 +124,10 @@ fetch("http://localhost:3000/api/products")
                     }
                 }
            
-                if(cart[i].value <= 0)
+                if(cart[i].value <= 0) // Si valeur inférieur ou égal à 0 supprime l'élément concerner.
                 {
-                    let removeArticle = e.target.closest("article");
-                    let button = removeArticle.querySelector(".deleteItem");
+                    const removeArticle = e.target.closest("article");
+                    const button = removeArticle.querySelector(".deleteItem");
                     cartItems.removeChild(removeArticle);
                     let indice = button.dataset.indice;
                     cart.splice(indice, 1);
@@ -136,13 +136,13 @@ fetch("http://localhost:3000/api/products")
                 }
             })
             
-            deleteItem.addEventListener("click", (e) => 
+            deleteItem.addEventListener("click", (e) =>  //Lors du clique sur le texte "supprimer" supprime l'élément concerner.
             {
                 let data = article.dataset;
                 if(data)
                 {   
                     let removeArticle = e.target.closest("article");
-                    let button = removeArticle.querySelector(".deleteItem");
+                    const button = removeArticle.querySelector(".deleteItem");
                     cartItems.removeChild(removeArticle);
                     let indice = button.dataset.indice;
                     cart.splice(indice, 1);
@@ -162,32 +162,35 @@ fetch("http://localhost:3000/api/products")
         }
     }
     
-    let inputFirstName = document.getElementById("firstName");
-    let firstNameError = document.getElementById("firstNameErrorMsg");
+    // Champs qui constituent le formulaire.
+    const inputFirstName = document.getElementById("firstName");
+    const firstNameError = document.getElementById("firstNameErrorMsg");
     let testFirstName = false;
 
-    let inputLastName = document.getElementById("lastName");
-    let lastNameError = document.getElementById("lastNameErrorMsg");
+    const inputLastName = document.getElementById("lastName");
+    const lastNameError = document.getElementById("lastNameErrorMsg");
     let testLastName = false;
 
-    let inputAddress = document.getElementById("address");
-    let addressError = document.getElementById("addressErrorMsg");
+    const inputAddress = document.getElementById("address");
+    const addressError = document.getElementById("addressErrorMsg");
     let testAddress = false;
 
-    let inputCity = document.getElementById("city");
-    let cityError = document.getElementById("cityErrorMsg");
+    const inputCity = document.getElementById("city");
+    const cityError = document.getElementById("cityErrorMsg");
     let testCity = false;
 
-    let inputEmail = document.getElementById("email");
-    let emailError = document.getElementById("emailErrorMsg");
+    const inputEmail = document.getElementById("email");
+    const emailError = document.getElementById("emailErrorMsg");
     let testEmail = false;
 
-    let submit = document.getElementById("order");
+    const submit = document.getElementById("order");
     submit.disabled = true;
     
     let contact = {};
     
-    inputFirstName.addEventListener("change", () =>
+    /* Pour chaque champ du formulaire une fois le champ remplit et que l'on change de champ appel 2 fonctions
+     la 1ère qui est une régle différente pour chaque champ et la 2ème vérifie que les élements sont remplis avec leur régles respecter. */
+     inputFirstName.addEventListener("change", () =>
     {
         validFirstName(); 
         order(testFirstName, testLastName, testAddress, testCity, testEmail);
@@ -217,9 +220,9 @@ fetch("http://localhost:3000/api/products")
         order(testFirstName, testLastName, testAddress, testCity, testEmail);
     });
 
-    let validFirstName = function ()
+    const validFirstName = function () // Régle qui concerne la validation du "Prénom".
     {                              
-        let regFirstName = new RegExp("^[A-Za-z][A-Za-zéçèàûîôïüä-]+$");
+        const regFirstName = new RegExp("^[A-Za-z][A-Za-zéçèàûîôïüä-]+$");
         testFirstName = regFirstName.test(inputFirstName.value); 
 
         if(testFirstName == false)
@@ -232,10 +235,10 @@ fetch("http://localhost:3000/api/products")
         };
     }
     
-    let validLastName = function ()
+    const validLastName = function () // Régle qui concerne la validation du "Nom".
     {                              
         
-        let regLastName = new RegExp("^[A-Za-z][A-Za-zéçèàûîôïüä-]+$");
+        const regLastName = new RegExp("^[A-Za-z][A-Za-zéçèàûîôïüä-]+$");
         testLastName = regLastName.test(inputLastName.value); 
        
         if(testLastName == false)
@@ -248,9 +251,9 @@ fetch("http://localhost:3000/api/products")
         };
     }
 
-    let validAddress = function ()
+    const validAddress = function () // Régle qui concerne la validation de "l'adresse".
     {                              
-        let regAddress = new RegExp("^[0-9][-A-Za-z0-9éçèàûîôïüä._ ]+$");
+        const regAddress = new RegExp("^[0-9][-A-Za-z0-9éçèàûîôïüä._ ]+$");
         testAddress = regAddress.test(inputAddress.value); 
  
         if(testAddress == false)
@@ -263,9 +266,9 @@ fetch("http://localhost:3000/api/products")
         };
     }
 
-    let validCity = function ()
+    const validCity = function () // Régle qui concerne la validation de la "Ville".
     {                              
-        let regCity = new RegExp("^[A-Za-z][A-Za-zéçèàûîôïüä-]+$");
+        const regCity = new RegExp("^[A-Za-z][A-Za-zéçèàûîôïüä-]+$");
         testCity = regCity.test(inputCity.value); 
 
         if(testCity == false)
@@ -278,10 +281,10 @@ fetch("http://localhost:3000/api/products")
         }
     }
 
-    let validEmail = function ()
+    const validEmail = function () // Régle qui concerne la validation du "Mail".
     {                              
     
-        let regEmail = new RegExp("^[A-Za-z][-a-z0-9._]+[-a-z0-9]@[-a-z0-9]+[.]{1}[a-z]{2,5}$");
+        const regEmail = new RegExp("^[A-Za-z][-a-z0-9._]+[-a-z0-9]@[-a-z0-9]+[.]{1}[a-z]{2,5}$");
         testEmail = regEmail.test(inputEmail.value); 
    
         if(testEmail == false)
@@ -294,9 +297,11 @@ fetch("http://localhost:3000/api/products")
         };
     }
  
-    let order = (testFirstName, testLastName, testAddress, testCity, testEmail) =>
+    let order = (testFirstName, testLastName, testAddress, testCity, testEmail) => /* Vérifie que les champs du formulaire sont bon et que le panier contient un produit
+     pour débloquer le bouton qui permet de confirmer la commande. */
     {
-        if(testFirstName && testLastName && testAddress && testCity && testEmail)
+        console.log(cart)
+        if(testFirstName && testLastName && testAddress && testCity && testEmail & cart.length >= 1)
         {
             submit.disabled = false;  
             
@@ -316,7 +321,7 @@ fetch("http://localhost:3000/api/products")
 
             let commande = {contact, products}  
            
-            fetch("http://localhost:3000/api/products/order", 
+            fetch("http://localhost:3000/api/products/order", // Envoie la commande au back.
             {
                 method: "POST",
                 headers: 
@@ -329,7 +334,7 @@ fetch("http://localhost:3000/api/products")
                 return response.json();
             }).then((data) => 
             {   
-                let orderId = "http://127.0.0.1:5500/front/html/confirmation.html?" + "id=" + data.orderId;
+                let orderId = "http://127.0.0.1:5500/front/html/confirmation.html?id=" + data.orderId; // Pour la page confirmation dans l'url on ajoute l'id que le back nous a renvoyé.
                     submit.addEventListener("click", (e) =>
                     {
                         e.preventDefault();

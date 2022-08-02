@@ -1,7 +1,6 @@
 const url = window.location.search;
-let params = new URLSearchParams(url);
-let id = params.get("id");
-console.log(id)
+const params = new URLSearchParams(url);
+const id = params.get("id");
 fetch("http://localhost:3000/api/products/")
   .then(function(res) 
   {
@@ -10,5 +9,6 @@ fetch("http://localhost:3000/api/products/")
     }
   }).then((data) => 
   {
-    orderId.textContent = id;
+    let orderId = document.getElementById("orderId");
+    orderId.textContent = id; // Affiche l'id qu'on nous a renvoyé à l'utilisateur sur la page de confirmation.
   })

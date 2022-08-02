@@ -5,24 +5,24 @@ fetch("http://localhost:3000/api/products")
     }
   })
   .then(function(products) {
-    for (product of products)
+    for (product of products) // Boucle qui permet d'afficher de manière dynamique tous les articles disponibles à la vente sur la page d'acceuil.
     {
-      let lien = document.createElement("a");
+      const lien = document.createElement("a");
       lien.href = "./product.html?id=" + product._id;
       
-      let title = document.createElement("h3");
+      const title = document.createElement("h3");
       title.classList.add("productName");
       
-      let description = document.createElement("p");
+      const description = document.createElement("p");
       description.classList.add("productDescription");
       
-      let image = document.createElement("img");
+      const image = document.createElement("img");
       image.src = product.imageUrl;
       image.alt = product.altTxt;
       
-      let article = document.createElement("article");
+      const article = document.createElement("article");
       
-      let items = document.getElementById("items");
+      const items = document.getElementById("items");
 
       
       items.appendChild(lien);
@@ -32,8 +32,7 @@ fetch("http://localhost:3000/api/products")
       article.appendChild(description);
 
       title.innerHTML = product.name;
-      description.innerHTML = product.description;
-      
+      description.innerHTML = product.description;   
     } 
   })
   .catch(function(err) {
