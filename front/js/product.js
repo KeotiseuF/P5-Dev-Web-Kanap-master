@@ -8,39 +8,14 @@ fetch("http://localhost:3000/api/products/" + id)
     }
   }).then((data) => {
 
-    // Affiche les détails du produits sélectionner (Image, titre, prix, description, couleurs).
-
-    const image = document.createElement("img");
-    image.src = data.imageUrl;
-    image.alt = data.altTxt;
-    
-    const item__img = document.getElementsByClassName("item__img");
-    item__img[0].appendChild(image);
-
-    const title = document.getElementById("title");
-    title.textContent = data.name;
-    
-    const price = document.getElementById("price");
-    price.textContent = data.price;
-
-    const description = document.getElementById("description");
-    description.textContent = data.description;
-
-    let colors = data.colors;
-    const color_select = document.getElementById("colors");
+    afficheDetails(data); 
     
     const addToCart = document.getElementById("addToCart"); // Appel d'un élément qui est un bouton pour ajouter au panier.
     
-    for (color of colors) // Boucle qui ajoute les couleurs du produit, qui permettra à un de choisir une couleur.
+    // Bouton pour ajouter au panier le produit ou les produits sélectionnés avec leur détails.
+    addToCart.addEventListener("click", (e) => 
     {
-        const createColor = document.createElement("option");
-        createColor.setAttribute("value", color);
-        createColor.innerHTML = color;
-        color_select.appendChild(createColor);         
-    } 
-
-    addToCart.addEventListener("click", (e) => // Bouton pour ajouter au panier le produit ou les produits sélectionnés avec leur détails.
-    {
+      const color_select = document.getElementById("colors");
       let choice_color = color_select.options[color_select.selectedIndex].value; 
       
       const quantity = document.getElementById("quantity");
@@ -49,7 +24,7 @@ fetch("http://localhost:3000/api/products/" + id)
       
       const product = {"id" : data._id, "color" : choice_color, "value" : parseInt(quantity_value)};
     
-      const cart = JSON.parse(localStorage.getItem("cart"));
+      let cart = JSON.parse(localStorage.getItem("cart"));
 
       if( choice_color == "" || 0 >= quantity_value || quantity_value > 100)
       {
@@ -87,3 +62,35 @@ fetch("http://localhost:3000/api/products/" + id)
   .catch(function(err) {
     console.error("Une erreur est survenue");
   });
+ 
+// Affiche les détails du produits sélectionner (Image, titre, prix, description, couleurs).
+const afficheDetails = (data) =>
+{
+ 
+  const image = document.createElement("img");
+  image.src = data.imageUrl;
+  image.alt = data.altTxt;
+  
+  const item__img = document.getElementsByClassName("item__img");
+  item__img[0].appendChild(image);
+
+  const title = document.getElementById("title");
+  title.textContent = data.name;
+  
+  const price = document.getElementById("price");
+  price.textContent = data.price;
+
+  const description = document.getElementById("description");
+  description.textContent = data.description;
+
+  let colors = data.colors;
+  const color_select = document.getElementById("colors");
+  
+  for (color of colors) // Boucle qui ajoute les couleurs du produit, qui permettra à un de choisir une couleur.
+  {
+      const createColor = document.createElement("option");
+      createColor.setAttribute("value", color);
+      createColor.innerHTML = color;
+      color_select.appendChild(createColor);         
+  } 
+}
