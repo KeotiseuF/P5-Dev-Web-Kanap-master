@@ -1,0 +1,7 @@
+{
+  "page d'accueil": "https://keotiseuf.github.io/P5-Dev-Web-Kanap-master/",
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  }
+}

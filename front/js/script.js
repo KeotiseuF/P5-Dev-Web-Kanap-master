@@ -8,7 +8,7 @@ fetch("http://localhost:3000/api/products")
     for (product of products) // Boucle qui permet d'afficher de manière dynamique tous les articles disponibles à la vente sur la page d'acceuil.
     {
       const lien = document.createElement("a");
-      lien.href = "./product.html?id=" + product._id;
+      lien.href = "./front/html/product.html?id=" + product._id;
       
       const title = document.createElement("h3");
       title.classList.add("productName");
